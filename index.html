@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>IA do Apostador Inteligente</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Suba de nível nas apostas esportivas com uma IA que analisa jogos, estatísticas e mercados e te entrega uma opinião profissional antes de você clicar em apostar." />
+  <style>
+    :root {
+      --bg: #050814;
+      --bg-alt: #070b1c;
+      --primary: #26f0ff;
+      --primary-soft: rgba(38, 240, 255, 0.1);
+      --accent: #00ff7b;
+      --accent-soft: rgba(0, 255, 123, 0.08);
+      --text: #f5f7ff;
+      --text-soft: #a6b0cf;
+      --danger: #ff4b6b;
+      --card: #0b1024;
+      --border-soft: rgba(255, 255, 255, 0.06);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.55);
+      --gradient-hero: radial-gradient(circle at top, #283a8a 0, #050814 55%);
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Layout básico */
+    .page {
+      min-height: 100vh;
+      background: var(--gradient-hero);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to bottom, rgba(5, 8, 20, 0.95), rgba(5, 8, 20, 0.7));
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 20% 0, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 24px rgba(38, 240, 255, 0.4);
+      font-size: 16px;
+      font-weight: 800;
+      color: #050814;
+    }
+
+    .brand-text-title {
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-text-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-pill {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0, 255, 123, 0.12);
+      border: 1px solid rgba(0, 255, 123, 0.35);
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      background: linear-gradient(120deg, var(--primary), var(--accent));
+      color: #050814;
+      font-weight: 600;
+      font-size: 13px;
+      box-shadow: 0 10px 26px rgba(0, 255, 180, 0.45);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+      box-shadow: 0 14px 32px rgba(0, 255, 180, 0.6);
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 18px 18px 60px;
+    }
+
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 28px;
+      padding: 28px 0 40px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .hero-tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      padding: 4px 10px 4px 4px;
+      border-radius: 999px;
+      background: rgba(7, 11, 28, 0.92);
+      border: 1px solid var(--border-soft);
+      width: fit-content;
+    }
+
+    .hero-tag-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 0, var(--accent), var(--primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #050814;
+      box-shadow: 0 0 18px rgba(0, 255, 123, 0.5);
+    }
+
+    .hero-tag-text-strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 4.1vw, 34px);
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+
+    .hero-title span {
+      background: linear-gradient(120deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      color: var(--text-soft);
+      max-width: 480px;
+    }
+
+    .hero-sub b {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .hero-level-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at 0 0, rgba(38, 240, 255, 0.08), rgba(11, 16, 36, 0.98));
+      box-shadow: var(--shadow-soft);
+      max-width: 460px;
+    }
+
+    .hero-level-text {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .hero-level-text b {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .hero-bar {
+      flex: 1;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(13, 19, 46, 0.8);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-bar-fill {
+      position: absolute;
+      inset: 0;
+      width: 74%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--danger), var(--primary), var(--accent));
+      background-size: 200% 100%;
+      animation: barFlow 3.5s ease-in-out infinite;
+    }
+
+    @keyframes barFlow {
+      0% { background-position: 0% 0; }
+      50% { background-position: 100% 0; }
+      100% { background-position: 0% 0; }
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .btn-primary {
+      padding: 12px 22px;
+      border-radius: 999px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      background: linear-gradient(120deg, var(--primary), var(--accent));
+      color: #050814;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 16px 40px rgba(0, 255, 180, 0.55);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .btn-primary span.icon {
+      font-size: 16px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+      box-shadow: 0 20px 48px rgba(0, 255, 180, 0.7);
+    }
+
+    .btn-ghost {
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px dashed rgba(166, 176, 207, 0.5);
+      background: rgba(7, 11, 28, 0.9);
+      color: var(--text-soft);
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    }
+
+    .btn-ghost strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--primary);
+      color: var(--text);
+      background: rgba(11, 16, 36, 1);
+    }
+
+    .hero-notice {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 6px;
+    }
+
+    .hero-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-panel {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 24px;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at top, rgba(38, 240, 255, 0.12), rgba(5, 8, 20, 0.98));
+      padding: 18px 16px 16px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .hero-panel-title {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .hero-panel-badge {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(0, 255, 123, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(0, 255, 123, 0.35);
+    }
+
+    .hero-chat {
+      background: rgba(7, 11, 30, 0.96);
+      border-radius: 16px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .hero-msg {
+      max-width: 88%;
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+
+    .hero-msg.user {
+      margin-left: auto;
+      background: rgba(38, 240, 255, 0.09);
+      border: 1px solid rgba(38, 240, 255, 0.3);
+    }
+
+    .hero-msg.ai {
+      background: rgba(11, 16, 40, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .hero-msg-ai-tag {
+      font-size: 9px;
+      color: var(--accent);
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .hero-metric-card {
+      padding: 7px 8px;
+      border-radius: 10px;
+      background: rgba(5, 8, 20, 0.9);
+      border: 1px solid var(--border-soft);
+    }
+
+    .hero-metric-label {
+      font-size: 9px;
+      color: var(--text-soft);
+    }
+
+    .hero-metric-value {
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .hero-metric-hint {
+      font-size: 9px;
+      color: var(--accent);
+      margin-top: 1px;
+    }
+
+    .hero-panel-footer {
+      margin-top: 12px;
+      font-size: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-soft);
+    }
+
+    .hero-tag-safe {
+      font-size: 9px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Section generic */
+    section {
+      margin-top: 34px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-soft);
+      max-width: 520px;
+    }
+
+    /* Steps */
+    .steps-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    @media (max-width: 800px) {
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .step-card {
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(11, 16, 36, 1), #050814);
+      border: 1px solid var(--border-soft);
+      padding: 14px 14px 12px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .step-pill {
+      margin-top: 8px;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(38, 240, 255, 0.08);
+      color: var(--primary);
+      width: fit-content;
+      border: 1px solid rgba(38, 240, 255, 0.3);
+    }
+
+    /* Benefits */
+    .benefits-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .benefits-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .benefits-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 700px) {
+      .benefits-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .benefit-card {
+      border-radius: var(--radius-lg);
+      background: var(--card);
+      border: 1px solid var(--border-soft);
+      padding: 10px 11px;
+    }
+
+    .benefit-label {
+      font-size: 11px;
+      color: var(--accent);
+      margin-bottom: 3px;
+    }
+
+    .benefit-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .benefit-desc {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .benefits-side {
+      border-radius: var(--radius-xl);
+      background: radial-gradient(circle at top, rgba(0, 255, 123, 0.14), rgba(5, 8, 20, 0.98));
+      border: 1px solid var(--border-soft);
+      padding: 14px 14px 12px;
+      box-shadow: var(--shadow-soft);
+      font-size: 12px;
+    }
+
+    .benefits-side-tag {
+      font-size: 10px;
+      color: var(--bg);
+      background: #bdfce4;
+      display: inline-flex;
+      padding: 3px 8px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .benefits-side-list {
+      margin-top: 6px;
+      list-style: none;
+    }
+
+    .benefits-side-list li {
+      margin-bottom: 4px;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      color: var(--text-soft);
+      font-size: 11px;
+    }
+
+    .benefits-side-list li span.icon {
+      color: var(--accent);
+      margin-top: 1px;
+    }
+
+    /* Demo section */
+    .demo {
+      border-radius: var(--radius-xl);
+      background: var(--bg-alt);
+      border: 1px solid var(--border-soft);
+      padding: 16px 14px 12px;
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .demo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .demo-chat {
+      border-radius: 14px;
+      background: #050814;
+      border: 1px solid var(--border-soft);
+      padding: 10px;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .demo-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .demo-pill {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-soft);
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .demo-explainer {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+
+    /* Pricing / CTA */
+    .pricing {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .pricing {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pricing-card {
+      border-radius: var(--radius-xl);
+      background: radial-gradient(circle at top, rgba(38, 240, 255, 0.12), rgba(5, 8, 20, 0.98));
+      border: 1px solid var(--border-soft);
+      padding: 16px 16px 14px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .price-tag {
+      font-size: 11px;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .price-main {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 4px;
+    }
+
+    .price-amount {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .price-period {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .price-note {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+    }
+
+    .price-list {
+      list-style: none;
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+
+    .price-list li {
+      margin-bottom: 4px;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .price-list li span.icon {
+      color: var(--accent);
+      margin-top: 1px;
+    }
+
+    .pricing-extra {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    /* FAQ */
+    .faq {
+      margin-top: 30px;
+    }
+
+    .faq-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    @media (max-width: 800px) {
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .faq-item {
+      border-radius: var(--radius-lg);
+      background: var(--card);
+      border: 1px solid var(--border-soft);
+      padding: 10px 11px;
+      font-size: 11px;
+    }
+
+    .faq-q {
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .faq-a {
+      color: var(--text-soft);
+    }
+
+    footer {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 30px 18px 24px;
+      font-size: 11px;
+      color: var(--text-soft);
+      border-top: 1px solid var(--border-soft);
+      margin-top: 40px;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footer-row span strong {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="nav">
+        <div class="brand">
+          <div class="brand-logo">IA</div>
+          <div>
+            <div class="brand-text-title">Apostador Inteligente</div>
+            <div class="brand-text-sub">Análise profissional em tempo real</div>
+          </div>
+        </div>
+        <div class="nav-cta">
+          <div class="nav-pill">
+            🧠 <span>IA treinada para <b>futebol</b></span>
+          </div>
+          <button class="nav-btn" onclick="scrollToId('pricing')">
+            Acessar agora
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero" id="topo">
+        <div class="hero-left">
+          <div class="hero-tagline">
+            <div class="hero-tag-dot">⚡</div>
+            <span class="hero-tag-text-strong">Suba de nível nas apostas</span>
+            <span style="font-size:10px;color:var(--text-soft);">sem virar refém do palpite</span>
+          </div>
+          <h1 class="hero-title">
+            A IA que <span>analisa o jogo por você</span><br /> antes de você clicar em “apostar”.
+          </h1>
+          <p class="hero-sub">
+            Em vez de ir no “achismo” ou no hype do momento, você faz suas apostas com uma
+            <b>análise profissional de jogo, mercados e risco</b> — em segundos, dentro de um chat.
+          </p>
+
+          <div class="hero-level-card">
+            <div class="hero-level-text">
+              Nível atual do seu jogo: <b>Apostador Iniciante</b><br />
+              <span style="font-size:11px;">Com a IA, você começa a jogar como <b>Apostador Inteligente</b>.</span>
+            </div>
+            <div class="hero-bar">
+              <div class="hero-bar-fill"></div>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn-primary" onclick="scrollToId('pricing')">
+              <span class="icon">🎯</span>
+              Começar a usar a IA agora
+            </button>
+            <button class="btn-ghost" onclick="scrollToId('demo')">
+              Ver como a IA responde <strong>na prática</strong>
+            </button>
+          </div>
+          <div class="hero-notice">
+            ⚠️ A IA não promete green garantido. Ela te protege de aposta boba e te dá
+            <b>leitura séria do jogo</b>.
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="hero-panel">
+            <div class="hero-panel-head">
+              <div class="hero-panel-title">Prévia da IA em ação</div>
+              <div class="hero-panel-badge">Análise em tempo real</div>
+            </div>
+            <div class="hero-chat">
+              <div class="hero-msg user">
+                “Pô, IA, Over 2.5 em Flamengo x Palmeiras hoje faz sentido ou é viagem?”
+              </div>
+              <div class="hero-msg ai">
+                <div class="hero-msg-ai-tag">IA Analista</div>
+                Nos últimos jogos, os dois times vêm criando muito: finalizações altas, média de
+                gols elevada e estilo ofensivo. As odds do Over 2.5 estão alinhadas com esse cenário,
+                mas não é aposta conservadora. <br /><br />
+                <b>Pô, apostador</b>, pra um perfil moderado eu curto mais o Over 1.5 gols: mantém a
+                leitura a favor de gols, mas reduz o risco de você depender de um jogão maluco.
+              </div>
+              <div class="hero-msg user">
+                “E se eu quiser arriscar mais?”
+              </div>
+              <div class="hero-msg ai">
+                Aí você está indo pra um jogo mais agressivo. Posso te mostrar mercados alternativos
+                (escanteios e chutes no gol) que estão mais coerentes com os números do que só forçar
+                linha alta de gols.
+              </div>
+            </div>
+            <div class="hero-metrics">
+              <div class="hero-metric-card">
+                <div class="hero-metric-label">Mercados avaliados</div>
+                <div class="hero-metric-value">Gols, escanteios, BTTS…</div>
+                <div class="hero-metric-hint">Análise além do placar</div>
+              </div>
+              <div class="hero-metric-card">
+                <div class="hero-metric-label">Estilo da resposta</div>
+                <div class="hero-metric-value">Profissional</div>
+                <div class="hero-metric-hint">Sem ilusão, só cenário real</div>
+              </div>
+              <div class="hero-metric-card">
+                <div class="hero-metric-label">Objetivo final</div>
+                <div class="hero-metric-value">Decisão consciente</div>
+                <div class="hero-metric-hint">Você manda, a IA orienta</div>
+              </div>
+            </div>
+            <div class="hero-panel-footer">
+              <span>⚽ Foco total: futebol e seus mercados.</span>
+              <span class="hero-tag-safe">Responsabilidade acima de hype.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMO FUNCIONA -->
+      <section id="como-funciona">
+        <h2 class="section-title">Como a IA joga junto com você</h2>
+        <p class="section-sub">
+          Não é robô mandando “entrada pronta”. É um analista virtual que lê o jogo, os números
+          e o risco junto com você — e fala a real quando a aposta não faz sentido.
+        </p>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-tag">Passo 1</div>
+            <div class="step-title">Você manda a dúvida como fala com um amigo</div>
+            <div class="step-desc">
+              “Pô, IA, esse Over 2.5 presta?”, “Ambas marcam aqui é loucura?”, “Escanteios nesse
+              jogo fazem sentido?” — você pergunta do jeito que fala no dia a dia.
+            </div>
+            <div class="step-pill">Chat simples, linguagem humana</div>
+          </div>
+          <div class="step-card">
+            <div class="step-tag">Passo 2</div>
+            <div class="step-title">A IA fuça tudo que importa antes de responder</div>
+            <div class="step-desc">
+              Forma dos times, gols, escanteios, chutes no gol, contexto de tabela, estilo de jogo,
+              risco, coerência de odd… ela puxa o máximo de informação possível antes de opinar.
+            </div>
+            <div class="step-pill">Análise técnica sem mimimi</div>
+          </div>
+          <div class="step-card">
+            <div class="step-tag">Passo 3</div>
+            <div class="step-title">Ela te dá a visão profissional + alternativa</div>
+            <div class="step-desc">
+              A IA fala se a aposta é conservadora, moderada ou arriscada. Se estiver muito agressiva,
+              ela mesmo sugere: “Pô, apostador, isso aqui tá pesado. Prefiro esse outro caminho…”.
+            </div>
+            <div class="step-pill">Você escolhe, mas escolhe consciente</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BENEFÍCIOS E DIFERENCIAL -->
+      <section id="beneficios">
+        <h2 class="section-title">O que muda quando você joga com a IA do seu lado</h2>
+        <p class="section-sub">
+          Em vez de ir na emoção, na dica aleatória ou no vídeo de 15 segundos, você usa uma IA
+          criada pra pensar <b>como um analista</b> e falar com você <b>como um parceiro de banca</b>.
+        </p>
+
+        <div class="benefits-grid">
+          <div>
+            <div class="benefits-list">
+              <div class="benefit-card">
+                <div class="benefit-label">Leitura completa de jogo</div>
+                <div class="benefit-title">Não é só “vai bater ou não”</div>
+                <div class="benefit-desc">
+                  A IA comenta desempenho, volume ofensivo, estilo de jogo, contexto de tabela e o
+                  que isso significa pros mercados de gols, escanteios, BTTS, handicap e afins.
+                </div>
+              </div>
+              <div class="benefit-card">
+                <div class="benefit-label">Foco em risco</div>
+                <div class="benefit-title">Te mostra onde você tá se enfiando</div>
+                <div class="benefit-desc">
+                  Ela te avisa quando a aposta é agressiva demais pro cenário do jogo e quando faz
+                  mais sentido proteger a banca com linhas mais seguras.
+                </div>
+              </div>
+              <div class="benefit-card">
+                <div class="benefit-label">Mercados reais</div>
+                <div class="benefit-title">Gols, escanteios, chutes e mais</div>
+                <div class="benefit-desc">
+                  A IA olha para os principais mercados de futebol: gols, escanteios, ambas marcam,
+                  chutes no gol, cartões e estatísticas avançadas, sempre que tiver dado.
+                </div>
+              </div>
+              <div class="benefit-card">
+                <div class="benefit-label">Responsabilidade</div>
+                <div class="benefit-title">Quando for melhor ficar fora, ela fala</div>
+                <div class="benefit-desc">
+                  Jogo estranho, números confusos, risco desnecessário? A IA não te incentiva a
+                  forçar entrada só pra apostar. Ela fala “melhor passar” quando for a decisão certa.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="benefits-side">
+            <div class="benefits-side-tag">Diferencial da IA</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:4px;">
+              Ela não é “tipster automático”. Ela é seu filtro de lucidez.
+            </div>
+            <div style="font-size:11px;color:var(--text-soft);">
+              A maioria dos conteúdos empurra aposta. Aqui, o foco é outro:
+            </div>
+            <ul class="benefits-side-list">
+              <li><span class="icon">✔</span><span>Te mostrar o lado bom e o lado ruim de cada ideia.</span></li>
+              <li><span class="icon">✔</span><span>Te lembrar da sua banca e do nível de risco.</span></li>
+              <li><span class="icon">✔</span><span>Te oferecer alternativas mais inteligentes quando você exagerar.</span></li>
+              <li><span class="icon">✔</span><span>Te ajudar a pensar como apostador profissional, não como torcedor empolgado.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- DEMO / ROTEIRO DE CONVERSA -->
+      <section id="demo">
+        <h2 class="section-title">Na prática, é assim que a IA conversa com seu seguidor</h2>
+        <p class="section-sub">
+          Você ou a sua audiência abrem o chat, mandam a ideia de aposta e a IA devolve análise,
+          risco e um plano melhor quando for o caso.
+        </p>
+
+        <div class="demo">
+          <div>
+            <div class="demo-tag">Exemplo de conversa realista</div>
+            <div class="demo-chat">
+              <div class="hero-msg user">
+                “Pô, IA, tô pensando em ir de Over 3.5 escanteios do time da casa no primeiro tempo.
+                Faz sentido?”
+              </div>
+              <div class="hero-msg ai">
+                <div class="hero-msg-ai-tag">IA Analista</div>
+                Nos últimos jogos em casa, esse time tem média alta de escanteios a favor, principalmente
+                nos primeiros 45 minutos. É um time que ataca pelas pontas, cruza bastante e costuma
+                pressionar início de jogo. <br /><br />
+                O adversário sofre muitos cruzamentos e recua quando joga fora, o que aumenta a chance
+                de escanteios pro mandante. A linha de 3.5 não é absurda, mas ainda assim é uma aposta
+                de risco moderado, não conservadora.
+              </div>
+              <div class="hero-msg user">
+                “E o que seria uma abordagem mais segura nesse jogo?”
+              </div>
+              <div class="hero-msg ai">
+                Uma alternativa é trabalhar a linha total de escanteios do jogo em vez de depender
+                só do mandante no primeiro tempo. <br /><br />
+                <b>Pô, apostador</b>, se você quer algo menos tenso, eu preferiria uma linha mais baixa
+                com participação dos dois times, ou até focar no mercado de gols com over 1.5 se o
+                padrão ofensivo se confirmar ao vivo.
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="demo-pill">
+              🎮 Modo de jogo &middot; <span style="color:var(--accent);font-weight:600;">Gamificado</span>
+            </div>
+            <p class="demo-explainer">
+              Cada vez que você consulta a IA, é como se subisse de nível: você entende mais o jogo, 
+              lê melhor o risco, para de forçar entrada idiota e passa a usar o mercado a seu favor.
+            </p>
+            <p class="demo-explainer" style="margin-top:8px;">
+              Você pode usar isso:
+            </p>
+            <ul class="benefits-side-list" style="margin-top:4px;">
+              <li><span class="icon">➕</span><span>Pra você tomar decisões melhores na sua banca.</span></li>
+              <li><span class="icon">➕</span><span>Como produto digital pra sua audiência se diferenciar da massa.</span></li>
+              <li><span class="icon">➕</span><span>Como diferencial de marca: você não empurra aposta, você oferece análise.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRICING / CTA -->
+      <section id="pricing" class="pricing">
+        <div class="pricing-card">
+          <div class="price-tag">Acesso ao Chat da IA do Apostador Inteligente</div>
+          <div class="price-main">
+            <div class="price-amount">R$ 00,00</div>
+            <div class="price-period">/ defina aqui seu plano</div>
+          </div>
+          <div class="price-note">
+            Você define se vai vender por assinatura mensal, plano único ou pacote de créditos.
+            A estrutura da IA já nasce pensada pra gerar valor em cada conversa.
+          </div>
+          <ul class="price-list">
+            <li><span class="icon">⚡</span><span>Chat 24/7 com análise profissional focada em futebol.</span></li>
+            <li><span class="icon">⚡</span><span>Leitura de jogo, estatísticas e principais mercados (gols, escanteios, BTTS, chutes, cartões, etc.).</span></li>
+            <li><span class="icon">⚡</span><span>Opinião clara: aposta conservadora, moderada ou agressiva.</span></li>
+            <li><span class="icon">⚡</span><span>Alternativas mais inteligentes quando a ideia do apostador estiver viajando.</span></li>
+            <li><span class="icon">⚡</span><span>Tom humano, direto, falando a língua de quem vive futebol.</span></li>
+          </ul>
+          <button class="btn-primary" style="width:100%;justify-content:center;margin-top:4px;">
+            <span class="icon">🚀</span>
+            Quero oferecer essa IA pros meus seguidores
+          </button>
+          <div class="pricing-extra">
+            <br />
+            Use essa IA como produto digital, como bônus em comunidade ou como diferencial da sua página.
+            O ponto é simples: enquanto outros empurram aposta, você vende <b>consciência e leitura de jogo</b>.
+          </div>
+        </div>
+
+        <div>
+          <h2 class="section-title">Isso não é sobre “acertar tudo”.</h2>
+          <p class="section-sub">
+            É sobre jogar melhor, entender o que você está fazendo com o seu dinheiro e oferecer algo
+            diferente da manada pra quem te acompanha.
+          </p>
+          <p class="section-sub" style="margin-top:10px;">
+            Se você quer construir uma marca forte no futebol, precisa parar de parecer só mais um
+            divulgador de casa e começar a ser <b>referência de leitura e responsabilidade</b>.
+          </p>
+          <p class="section-sub" style="margin-top:10px;">
+            A IA do Apostador Inteligente nasce exatamente pra isso.
+          </p>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="faq">
+        <h2 class="section-title">Perguntas que seu seguidor faria (e que você pode responder com esse produto)</h2>
+        <p class="section-sub">
+          Use essas ideias na própria landing ou na comunicação da sua página pra explicar o que a IA faz.
+        </p>
+
+        <div class="faq-grid">
+          <div class="faq-item">
+            <div class="faq-q">A IA garante que minhas apostas vão bater?</div>
+            <div class="faq-a">
+              Não. Futebol tem variáveis que ninguém controla. A IA não é máquina de green, é uma
+              ferramenta de <b>leitura e decisão consciente</b>. Ela te ajuda a enxergar o cenário,
+              o risco e alternativas mais inteligentes — mas a responsabilidade final é sempre sua.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Ela manda sinal pronto?</div>
+            <div class="faq-a">
+              Não é grupo de tips. Você traz a ideia de aposta, o jogo ou o mercado, e a IA faz
+              uma análise profissional pra você entender se aquilo faz sentido ou não pro contexto.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Ela olha só pra gols?</div>
+            <div class="faq-a">
+              Não. Sempre que possível, a IA leva em conta <b>gols, escanteios, chutes no gol, ambas marcam,
+              cartões, handicap</b> e outras estatísticas, dependendo do que tiver disponível pro jogo.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">E se o jogo estiver muito imprevisível?</div>
+            <div class="faq-a">
+              A IA não tem problema em dizer “melhor ficar fora”. Quando os números não ajudam, quando o cenário é
+              caótico ou quando a aposta não conversa com a realidade do jogo, ela te orienta a proteger a banca.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-row">
+        <span>© <span id="year"></span> IA do Apostador Inteligente. Todos os direitos reservados.</span>
+        <span>Construído para quem quer <strong>futebol + responsabilidade</strong>, não ilusão.</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function scrollToId(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      window.scrollTo({
+        top: el.getBoundingClientRect().top + window.scrollY - 70,
+        behavior: 'smooth'
+      });
+    }
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
