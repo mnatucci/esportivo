@@ -80,22 +80,16 @@
       gap: 10px;
     }
 
+    /* LOGO AJUSTADA: sem caixa verde, redimensionando sozinha */
     .brand-logo {
-      width: 32px;
       height: 32px;
-      border-radius: 10px;
-      background: radial-gradient(circle at 20% 0, var(--primary), var(--accent));
       display: flex;
       align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 24px rgba(38, 240, 255, 0.4);
-      overflow: hidden;
     }
 
     .brand-logo img {
-      width: 100%;
       height: 100%;
-      object-fit: contain;
+      width: auto;
     }
 
     .brand-text-title {
@@ -1098,10 +1092,11 @@
         <div class="pricing-card">
           <div class="price-tag">Acesso ao Chat da Meta44</div>
           <div class="price-main">
-            <div class="price-amount">R$ 69,90</div>
-            <div class="price-period">/ ou 9x de 7,77</div>
+            <div class="price-amount">R$ 00,00</div>
+            <div class="price-period">/ defina aqui seu plano</div>
           </div>
           <div class="price-note">
+            Você define se vai vender por assinatura mensal, plano único ou pacote de créditos.
             A estrutura da IA já nasce pensada pra gerar valor em cada conversa.
           </div>
           <ul class="price-list">
@@ -1111,14 +1106,16 @@
             <li><span class="icon">⚡</span><span>Alternativas mais inteligentes quando a ideia do apostador estiver viajando.</span></li>
             <li><span class="icon">⚡</span><span>Tom humano, direto, falando a língua de quem vive futebol.</span></li>
           </ul>
-          <a href="https://pay.hotmart.com/N103267579J" 
-   target="_blank" 
-   class="btn-primary" 
-   style="width:100%;display:flex;justify-content:center;align-items:center;margin-top:4px;">
-   <span class="icon">🚀</span>
-   Quero Oferecer essa IA pros meus Seguidores
-</a>
-          </button>
+
+          <!-- CTA PESSOAL + LINK HOTMART -->
+          <a href="https://pay.hotmart.com/N103267579J"
+             target="_blank"
+             class="btn-primary"
+             style="width:100%;justify-content:center;margin-top:4px;text-align:center;">
+            <span class="icon">🚀</span>
+            Compre o seu agente inteligente aqui
+          </a>
+
           <div class="pricing-extra">
             <br />
             Use essa IA como produto digital, como bônus em comunidade ou como diferencial da sua página.
@@ -1144,9 +1141,9 @@
 
       <!-- FAQ -->
       <section class="faq">
-        <h2 class="section-title">Perguntas que seu seguidor faria (e que você pode responder com esse produto)</h2>
+        <h2 class="section-title">Perguntas frequentes</h2>
         <p class="section-sub">
-          Use essas ideias na própria landing ou na comunicação da sua página pra explicar o que a IA faz.
+          Essas perguntas são que nossos clientes mais fazem.
         </p>
 
         <div class="faq-grid">
@@ -1205,7 +1202,3 @@
   </script>
 </body>
 </html>
-
-
-
-
