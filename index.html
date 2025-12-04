@@ -80,17 +80,19 @@
       gap: 10px;
     }
 
-    /* LOGO AJUSTADA: sem caixa verde, redimensionando sozinha */
-    .brand-logo {
-      height: 32px;
-      display: flex;
-      align-items: center;
-    }
+    /* LOGO – sem distorcer no mobile */
+.brand-logo {
+  display: flex;
+  align-items: center;
+}
 
-    .brand-logo img {
-      height: 100%;
-      width: auto;
-    }
+.brand-logo img {
+  height: auto;
+  max-height: 32px;   /* controla a altura */
+  width: auto;        /* não força largura */
+  max-width: 100%;
+  object-fit: contain; 
+}
 
     .brand-text-title {
       font-weight: 700;
@@ -1201,5 +1203,6 @@
   </script>
 </body>
 </html>
+
 
 
