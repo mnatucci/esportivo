@@ -81,18 +81,18 @@
     }
 
     /* LOGO – sem distorcer no mobile */
-.brand-logo {
-  display: flex;
-  align-items: center;
-}
+    .brand-logo {
+      display: flex;
+      align-items: center;
+    }
 
-.brand-logo img {
-  height: auto;
-  max-height: 32px;   /* controla a altura */
-  width: auto;        /* não força largura */
-  max-width: 100%;
-  object-fit: contain; 
-}
+    .brand-logo img {
+      height: auto;
+      max-height: 32px;   /* controla a altura */
+      width: auto;        /* não força largura */
+      max-width: 100%;
+      object-fit: contain; 
+    }
 
     .brand-text-title {
       font-weight: 700;
@@ -223,6 +223,31 @@
     .hero-sub b {
       color: var(--text);
       font-weight: 600;
+    }
+
+    /* 🎥 VIDEO SHORTS – NOVO BLOCO */
+    .hero-video-wrapper {
+      margin-top: 10px;
+      max-width: 260px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--border-soft);
+      background: #000;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .hero-video {
+      position: relative;
+      width: 100%;
+      padding-bottom: 177.78%; /* proporção 9:16 para shorts */
+    }
+
+    .hero-video iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
     }
 
     .hero-level-card {
@@ -809,6 +834,23 @@
     .footer-row span strong {
       color: var(--accent);
     }
+
+    @media (max-width: 600px) {
+      .nav {
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+
+      .brand {
+        flex: 1 1 100%;
+      }
+
+      .nav-cta {
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: 8px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -851,6 +893,19 @@
             Em vez de ir no “achismo” ou no hype do momento, você faz suas apostas com uma
             <b>análise profissional de jogo, mercados e risco</b> — em segundos, dentro de um chat.
           </p>
+
+          <!-- 🎥 VIDEO SHORTS EMBUTIDO AQUI -->
+          <div class="hero-video-wrapper">
+            <div class="hero-video">
+              <!-- Troque SEU_VIDEO_ID pelo ID real do seu vídeo/short -->
+              <iframe 
+                src="https://www.youtube.com/embed/SEU_VIDEO_ID"
+                title="Apresentação Meta44"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+              </iframe>
+            </div>
+          </div>
 
           <div class="hero-level-card">
             <div class="hero-level-text">
@@ -1203,6 +1258,3 @@
   </script>
 </body>
 </html>
-
-
-
