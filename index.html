@@ -88,10 +88,10 @@
 
     .brand-logo img {
       height: auto;
-      max-height: 32px;   /* controla a altura */
-      width: auto;        /* não força largura */
+      max-height: 32px;
+      width: auto;
       max-width: 100%;
-      object-fit: contain; 
+      object-fit: contain;
     }
 
     .brand-text-title {
@@ -172,6 +172,30 @@
       gap: 18px;
     }
 
+    /* VIDEO HERO – YOUTUBE SHORTS */
+    .hero-video {
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 9 / 16;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      background: #000;
+    }
+
+    .hero-video iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    @media (max-width: 600px) {
+      .hero-video {
+        margin: 0 auto;
+      }
+    }
+
     .hero-tagline {
       display: inline-flex;
       align-items: center;
@@ -223,31 +247,6 @@
     .hero-sub b {
       color: var(--text);
       font-weight: 600;
-    }
-
-    /* 🎥 VIDEO SHORTS – NOVO BLOCO */
-    .hero-video-wrapper {
-      margin-top: 10px;
-      max-width: 260px;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid var(--border-soft);
-      background: #000;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .hero-video {
-      position: relative;
-      width: 100%;
-      padding-bottom: 177.78%; /* proporção 9:16 para shorts */
-    }
-
-    .hero-video iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
     }
 
     .hero-level-card {
@@ -834,23 +833,6 @@
     .footer-row span strong {
       color: var(--accent);
     }
-
-    @media (max-width: 600px) {
-      .nav {
-        flex-wrap: wrap;
-        align-items: flex-start;
-      }
-
-      .brand {
-        flex: 1 1 100%;
-      }
-
-      .nav-cta {
-        width: 100%;
-        justify-content: flex-start;
-        margin-top: 8px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -881,6 +863,18 @@
       <!-- HERO -->
       <section class="hero" id="topo">
         <div class="hero-left">
+
+          <!-- VÍDEO SHORTS COMO PRIMEIRO IMPACTO -->
+          <div class="hero-video">
+            <iframe 
+              src="https://www.youtube.com/embed/79hYrOGM0nQ"
+              title="Meta44 - Vídeo de Apresentação"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+
           <div class="hero-tagline">
             <div class="hero-tag-dot">⚡</div>
             <span class="hero-tag-text-strong">Suba de nível nas apostas</span>
@@ -893,19 +887,6 @@
             Em vez de ir no “achismo” ou no hype do momento, você faz suas apostas com uma
             <b>análise profissional de jogo, mercados e risco</b> — em segundos, dentro de um chat.
           </p>
-
-          <!-- 🎥 VIDEO SHORTS EMBUTIDO AQUI -->
-          <div class="hero-video-wrapper">
-            <div class="hero-video">
-              <!-- Troque SEU_VIDEO_ID pelo ID real do seu vídeo/short -->
-              <iframe 
-                src="https://youtube.com/shorts/79hYrOGM0nQ?si=gSVBGdEBkbylVcTE"
-                title="Apresentação Meta44"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen>
-              </iframe>
-            </div>
-          </div>
 
           <div class="hero-level-card">
             <div class="hero-level-text">
@@ -1258,4 +1239,3 @@
   </script>
 </body>
 </html>
-
